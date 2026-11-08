@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block head %}
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+{% endblock %}
+{% block content %}
+<main>
+<section class="hero">
+  <div class="hero-copy"><p class="eyebrow">New season</p><h1>Fine jewellery in {{ site.city }}</h1>
+  <p>{{ site.tagline }}. See every piece in 3D, price it live per gram, exchange your old gold, or pre-book to lock today's rate.</p>
+  <div class="row"><a class="btn gold" href="#calculator">Price calculator</a><a class="btn neo" href="#bento">Collections</a></div></div>
+  <div class="viewer-wrap clay"><div id="viewer" role="img" aria-label="Interactive 3D ring: drag to rotate, scroll or pinch to zoom"></div><div id="viewer-status">Loading 3D…</div>
+  <div class="viewer-bar glass">
+    <button class="chip on" data-metal="gold24"><i style="background:#ffc94d"></i>24K Yellow Gold</button>
+    <button class="chip" data-metal="rose18"><i style="background:#e3a08e"></i>18K Rose Gold</button>
+    <button class="chip" data-metal="platinum"><i style="background:#e8eaee"></i>Platinum</button>
+    <button class="chip" id="v-spin">Pause spin</button><button class="chip" id="v-replay">Replay intro</button></div></div>
+</section>
+
+<section id="bento" class="bento" aria-label="Collections">
+  <div class="tile glass rates"><h3>Today's Rates</h3><p class="muted" id="rates-note">Loading…</p>
+    <ul><li><span>Gold 24K</span><b data-rate="gold24:24"></b></li><li><span>Gold 22K</span><b data-rate="gold:22"></b></li><li><span>Gold 18K</span><b data-rate="gold:18"></b></li><li><span>Silver 999</span><b data-rate="silver:999"></b></li></ul></div>
+  <div class="tile clay-tile wide"><h3>Collections</h3><div class="chips">{% for c in ['Bridal','Diamond','Temple','Silver','Daily Wear','Gifting'] %}<span class="chip">{{ c }}</span>{% endfor %}</div></div>
+  <div class="tile neo-tile"><h3>Virtual Try-On</h3><p>Book a live video session with a consultant.</p><a class="btn gold" id="tryon" href="#">Book session</a></div>
+  <div class="tile clay-tile"><h3>Old Gold Exchange</h3><p>Estimate your value and upgrade.</p><a href="#calculator"><b>Estimate now →</b></a></div>
+  <div class="tile brutal wide"><p class="eyebrow">Limited edition · festive drop</p><h3>Only 108 pieces.</h3></div>
+</section>
+
+<section id="calculator" class="calc glass" aria-label="Price calculator">
+  <div class="row between"><h2>Price Calculator</h2><span id="rate-badge" class="badge">Loading rates…</span></div>
+  <div class="grid4">
+    <label>Metal<select id="c-metal"><option value="gold">Gold</option><option value="silver">Silver</option></select></label>
+    <label>Purity<select id="c-purity"></select></label>
+    <label>Weight (g)<input id="c-weight" type="number" min="0" step="0.01" value="10" inputmode="decimal"></label>
+    <label>Making charge (%)<input id="c-making" type="number" min="0" max="50" step="0.5" value="8" inputmode="decimal"></label>
+  </div>
+  <dl><div><dt id="r-rate-l">Rate</dt><dd id="r-rate"></dd></div><div><dt>Base metal value</dt><dd id="r-base"></dd></div><div><dt id="r-making-l">Making / labour</dt><dd id="r-making"></dd></div><div><dt id="r-gst-l">GST</dt><dd id="r-gst"></dd></div><div class="total"><dt>Total estimated price</dt><dd id="r-total"></dd></div></dl>
+  <div class="exchange"><h3>Old Gold / Silver Exchange</h3>
+    <div class="grid4">
+      <label>Old metal<select id="x-metal"><option value="gold">Gold</option><option value="silver">Silver</option></select></label>
+      <label>Purity<select id="x-purity"></select></label>
+      <label>Old weight (g)<input id="x-weight" type="number" min="0" step="0.01" value="5" inputmode="decimal"></label>
+      <label>Melting/testing loss (%)<input id="x-loss" type="number" min="0" max="50" step="0.5" value="3" inputmode="decimal"></label>
+    </div>
+    <dl><div><dt>Estimated exchange value</dt><dd id="x-value"></dd></div><div><dt>New purchase total</dt><dd id="x-total"></dd></div><div class="total"><dt id="x-label">Balance payable</dt><dd id="x-result"></dd></div></dl>
+    <p class="muted">Indicative only. Final value is confirmed after purity testing in store or at doorstep pickup. Call {{ site.phone }}.</p>
+  </div>
+  <button class="btn gold" id="calc-prebook" type="button">Pre-book this item</button>
+</section>
+
+<section class="faq"><h2>Frequently asked questions</h2>{% for q, a in faq %}<details><summary>{{ q }}</summary><p>{{ a }}</p></details>{% endfor %}</section>
+</main>
+{% endblock %}
+{% block scripts %}<script type="module" src="{{ url_for('static', filename='js/viewer.js') }}"></script>{% endblock %}

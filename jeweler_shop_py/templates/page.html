@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="doc"><h1>{{ heading }}</h1>
+{% if kind == 'contact' %}
+<div class="cards">
+<section class="card glass"><h3>Visit us</h3><address>{{ site.legal_name }}<br>{{ site.address }}</address><a href="{{ site.maps_url }}" target="_blank" rel="noopener">Get directions</a></section>
+<section class="card glass"><h3>Store hours</h3>{% for h in site.hours %}<p>{{ h.label }}: {{ h.opens }} – {{ h.closes }}</p>{% endfor %}</section>
+<section class="card glass"><h3>Talk to us</h3><p><a href="tel:{{ site.phone_e164 }}">{{ site.phone }}</a></p><p><a href="mailto:{{ site.email }}?subject=Customer%20support%20request">{{ site.email }}</a></p></section>
+<section class="card glass"><h3>Grievance officer</h3><p>{{ site.grievance_officer }}. Write to <a href="mailto:{{ site.email }}?subject=Grievance">{{ site.email }}</a>; we acknowledge within 48 hours and aim to resolve within 30 days.</p></section>
+</div>
+<h3>Support topics</h3><ul><li>Order, delivery or pickup status</li><li>Pre-booking deposits and rate lock</li><li>Old gold exchange appointments</li><li>Resizing, repair, cleaning and insurance</li><li>Hallmark and invoice copies</li></ul>
+{% else %}
+{% if updated %}<p class="muted">Last updated: {{ updated }}</p>{% endif %}
+{% for h, t in sections %}<section>{% if h %}<h3>{{ h }}</h3>{% endif %}<p>{{ t }}</p></section>{% endfor %}
+{% endif %}
+</main>
+{% endblock %}

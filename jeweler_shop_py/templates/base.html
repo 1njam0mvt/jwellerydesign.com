@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ meta.title }}</title>
+<meta name="description" content="{{ meta.description }}">
+<meta name="keywords" content="{{ meta.keywords }}">
+<meta name="robots" content="{{ meta.robots }}">
+<link rel="canonical" href="{{ meta.canonical }}">
+<meta property="og:type" content="website"><meta property="og:locale" content="en_IN">
+<meta property="og:site_name" content="{{ site.name }}"><meta property="og:title" content="{{ meta.title }}">
+<meta property="og:description" content="{{ meta.description }}"><meta property="og:url" content="{{ meta.canonical }}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{{ meta.title }}">
+{% if meta.image %}<meta property="og:image" content="{{ meta.image }}"><meta name="twitter:image" content="{{ meta.image }}">{% endif %}
+<meta name="geo.placename" content="{{ site.city }}"><meta name="geo.position" content="{{ meta.geo_position }}"><meta name="ICBM" content="{{ site.lat }}, {{ site.lng }}">
+{% for item in ld %}<script type="application/ld+json">{{ item | tojson }}</script>{% endfor %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block head %}{% endblock %}
+</head>
+<body>
+<header class="nav glass"><a class="brand" href="/">{{ site.name }}</a>
+<nav aria-label="Main"><a href="/#calculator">Rates</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav></header>
+{% block content %}{% endblock %}
+<footer class="foot"><p>{{ site.legal_name }} · {{ site.address }}</p><p><a href="tel:{{ site.phone_e164 }}">{{ site.phone }}</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a></p></footer>
+
+<nav class="actions glass" aria-label="Quick actions">
+<a class="btn neo" id="act-mail" href="#">✉ Email</a>
+<a class="btn neo" href="tel:{{ site.phone_e164 }}" aria-label="Call {{ site.phone }}">📞 Call</a>
+<button class="btn gold" id="open-prebook" type="button">Pre-book</button>
+</nav>
+<div id="toast" class="toast glass" role="status" hidden></div>
+
+<dialog id="prebook" aria-labelledby="pb-title"><form id="pb-form" novalidate>
+<div class="row between"><h2 id="pb-title">Pre-book &amp; lock your price</h2><button type="button" class="x" id="pb-close" aria-label="Close">×</button></div>
+<p class="muted">A deposit locks today's metal rate for {{ prebook.lock_hours }} hours. Balance is due within {{ prebook.balance_days }} days.</p>
+<label>Full name<input name="name" autocomplete="name"><small data-err="name"></small></label>
+<label>Phone<input name="phone" type="tel" autocomplete="tel"><small data-err="phone"></small></label>
+<label>Email<input name="email" type="email" autocomplete="email"><small data-err="email"></small></label>
+<label>Item or design<input name="item"><small data-err="item"></small></label>
+<div class="grid3">
+<label>Metal<select name="metal"><option value="24">Gold 24K</option><option value="22" selected>Gold 22K</option><option value="18">Gold 18K</option><option value="S925">Silver 925</option></select></label>
+<label>Est. value (₹)<input name="value" type="number" min="0" inputmode="numeric"><small data-err="value"></small></label>
+<label>Deposit<select name="pct">{% for p in prebook.deposit_options %}<option value="{{ p }}"{% if loop.index == 2 %} selected{% endif %}>{{ p }}%</option>{% endfor %}</select></label>
+</div>
+<div class="summary"><div class="row between"><span id="pb-rate-label">Rate reference</span><span id="pb-rate"></span></div><div class="row between strong"><span>Deposit due now</span><span id="pb-deposit"></span></div></div>
+<button class="btn gold wide" id="pb-submit">Pay deposit</button>
+<p class="muted" id="pb-note" hidden>Online checkout is unavailable right now. We opened an email draft so our team can confirm your booking.</p>
+</form></dialog>
+<script>window.SITE = {{ client | tojson }};</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
